@@ -38,6 +38,9 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
             search_query=['cs.DB', 'cs.IR']
             search_query='cs.DB' # don't need to specify if given a category
             search_query='au:kording'
+            search_query='au:kording+AND+ti:science'
+        search query prefixes includes ti (title), au (author), abs (abstract) and more.
+        See repository wiki page for more information including search query boolean
 
     start_index: int, start index
 
@@ -52,6 +55,21 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
     sort_by: str, either 'relevance' or 'lastUpdatedDate' or 'submittedDate' or None
 
     sort_order: str, either 'ascending' or 'descending' or None
+
+    Returns
+    =======
+    articles_all: list of dictionary each contains following keys
+        id: url.split('/abs/')[-1],
+        term: category terms
+        main_author: main_author of the article
+        authors: list of authors separated by commas
+        url: url of the article
+        pdf_url: pdf url of the article
+        title: title of the article
+        abstract: abstract of the article
+        publish_date: publish_date in datetime format
+        comment: comment of the article if available
+        journal_ref: reference to the journal if existed
     """
 
     base_url = 'http://export.arxiv.org/api/query?'
@@ -116,7 +134,7 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
             title = entry['title_detail']['value'].replace('\n', ' ').strip()
             abstract = entry['summary'].replace('\n', ' ')
             publish_date = parser.parse(entry['published'])
-            article = {'id': entry['link'].split('/')[-1],
+            article = {'id': url.split('/abs/')[-1],
                        'term': term,
                        'main_author': main_author,
                        'authors': authors,
@@ -147,11 +165,11 @@ def download(articles, path='arxiv_pdf'):
         os.mkdir(path)
     if len(articles) >= 1:
         for article in articles:
-            if article['pdf_link']:
+            if article['pdf_url']:
                 try:
                     filename = article['id'] + '.pdf'
-                    urlretrieve(article['pdf_link'], os.path.join(path, filename))
+                    urlretrieve(article['pdf_url'], os.path.join(path, filename))
                 except:
                     print('Error downloading: %s' % filename)
     else:
-        print("No pdf available for arXiv at %d" % article['pdf_link'])
+        print("No pdf available for arXiv at %d" % article['pdf_url'])
