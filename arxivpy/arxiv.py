@@ -79,32 +79,35 @@ def query(start_index=0,
         articles = list()
         response = urllib.request.urlopen(base_url + query).read()
         entries = feedparser.parse(response)
-        for entry in entries['entries']:
-            term = entry['arxiv_primary_category']['term']
-            main_author = entry['author']
-            authors = ', '.join([author['name'].strip() for author in entry['authors']])
-            link = entry['link']
-            for e in entry['links']:
-                if 'title' in e:
-                    if e['title'] == 'pdf':
-                        pdf_link = e['href']
-                else:
-                    pdf_link = 'http://arxiv.org/pdf/%s' % link.split('/')[-1]
-            title = entry['title_detail']['value'].replace('\n', ' ').strip()
-            abstract = entry['summary'].replace('\n', ' ')
-            publish_date = parser.parse(entry['published'])
-            article = {'id': entry['link'].split('/')[-1],
-                       'term': term,
-                       'main_author': main_author,
-                       'authors': authors,
-                       'link': link,
-                       'pdf_link': pdf_link,
-                       'title': title,
-                       'abstract': abstract,
-                       'publish_date': publish_date}
-            articles.append(article)
-        if i > start_index: time.sleep(wait_time + random.uniform(0, 3))
-        articles_all.extend(articles)
+        if len(entries['entries']) == 0:
+            print('Check query %s from the website if it returns anything' % (base_url + query) )
+        else:
+            for entry in entries['entries']:
+                term = entry['arxiv_primary_category']['term']
+                main_author = entry['author']
+                authors = ', '.join([author['name'].strip() for author in entry['authors']])
+                link = entry['link']
+                for e in entry['links']:
+                    if 'title' in e:
+                        if e['title'] == 'pdf':
+                            pdf_link = e['href']
+                    else:
+                        pdf_link = 'http://arxiv.org/pdf/%s' % link.split('/')[-1]
+                title = entry['title_detail']['value'].replace('\n', ' ').strip()
+                abstract = entry['summary'].replace('\n', ' ')
+                publish_date = parser.parse(entry['published'])
+                article = {'id': entry['link'].split('/')[-1],
+                           'term': term,
+                           'main_author': main_author,
+                           'authors': authors,
+                           'link': link,
+                           'pdf_link': pdf_link,
+                           'title': title,
+                           'abstract': abstract,
+                           'publish_date': publish_date}
+                articles.append(article)
+            if i > start_index: time.sleep(wait_time + random.uniform(0, 3))
+            articles_all.extend(articles)
     return articles_all
 
 def download(articles, path='arxiv_pdf'):
