@@ -1,5 +1,7 @@
 # Arxivpy
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/titipata/arxivpy/blob/master/LICENSE)
+
 Python wrapper for [arXiv API](http://arxiv.org/help/api/index).
 Here are related libraries and repositories: [arxiv.py](https://github.com/lukasschwab/arxiv.py),
 [python_arXiv_parsing_example.py](https://arxiv.org/help/api/examples/python_arXiv_parsing_example.txt)
