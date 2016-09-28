@@ -11,11 +11,16 @@ if sys.version_info[0] == 3:
 else:
     from urllib import urlretrieve, urlopen
 
-def query(start_index=0,
+categories = ['cs.', 'stat.', 'q-bio.', 'nlin.', 'math.',
+              'astro-ph', 'cond-mat.', 'gr-qc', 'hep-ex',
+              'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex',
+              'nucl-th', 'physics.', 'quant-ph']
+
+def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
+          start_index=0,
           max_index=100,
           results_per_iteration=100,
           wait_time=5.0,
-          fields=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
           sort_by='lastUpdatedDate',
           sort_order=None):
     """
@@ -25,6 +30,15 @@ def query(start_index=0,
 
     Parameters
     ==========
+    search_query: list or str, list of categories or plain search query string
+        see the end of this page http://arxiv.org/help/api/user-manual#python_simple_example
+        for more publication categories see https://github.com/titipata/arxivpy/wiki
+
+        example:
+            search_query=['cs.DB', 'cs.IR']
+            search_query='cs.DB' # don't need to specify if given a category
+            search_query='au:kording'
+
     start_index: int, start index
 
     max_index: int, end or max index
@@ -35,29 +49,24 @@ def query(start_index=0,
     wait_time: float, waiting time when scrape more than results_per_iteration
         this will wait for wait_time + uniform(0, 3) seconds
 
-    fields: list or str, list of fields
-        see the end of this page http://arxiv.org/help/api/user-manual#python_simple_example
-        for more fields see https://github.com/titipata/arxivpy/wiki
-        if no field specified, use 'all' as default
+    sort_by: str, either 'relevance' or 'lastUpdatedDate' or 'submittedDate' or None
 
-    sort_by: str, either "relevance" or "lastUpdatedDate" or "submittedDate" or None
-    sort_order: str, either "ascending" or "descending" or None
+    sort_order: str, either 'ascending' or 'descending' or None
     """
 
     base_url = 'http://export.arxiv.org/api/query?'
 
-    if isinstance(fields, str) or len(fields) == 1:
-        search_query = 'cat:%s' % fields
-    elif isinstance(fields, list) or len(fields) > 1:
-        search_query = '+OR+'.join(['cat:%s'%f for f in fields])
-    elif not search_query:
-        search_query = 'all'
+    if isinstance(search_query, list):
+        # assume giving a list of categories
+        search_query = '+OR+'.join(['cat:%s' % c for c in search_query])
+    elif isinstance(search_query, str) and any([c for c in categories if c in search_query]):
+        search_query = 'cat:%s' % search_query
     else:
-        search_query = 'all'
-    search_query = 'search_query=%s' % search_query
+        search_query = search_query
+    search_query_string = 'search_query=%s' % search_query
 
-    if results_per_iteration is None:
-        results_per_iteration = end_index
+    if results_per_iteration is None or results_per_iteration > max_index:
+        results_per_iteration = max_index
 
     if sort_by is not None:
         sort_by_query = 'sortBy=%s' % sort_by
@@ -74,7 +83,7 @@ def query(start_index=0,
         start_query = 'start=%i' % int(start_index)
         max_results_query = 'max_results=%i' % int(start_index + results_per_iteration)
 
-        ql = [search_query, sort_by_query, sort_order_query, start_query, max_results_query]
+        ql = [search_query_string, sort_by_query, sort_order_query, start_query, max_results_query]
         query_list = [q for q in ql if q is not '']
         query = '&'.join(query_list)
 

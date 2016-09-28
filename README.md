@@ -13,8 +13,8 @@ Here is an example on how to use `arxivpy`.
 
 ```python
 import arxivpy
-articles = arxivpy.query(start_index=0, max_index=200,
-                         fields=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
+articles = arxivpy.query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
+                         start_index=0, max_index=200,
                          wait_time=5.0, sort_by='lastUpdatedDate') # grab 200 articles
 ```
 
