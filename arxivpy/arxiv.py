@@ -139,7 +139,10 @@ def download(articles, path='arxiv_pdf'):
     if len(articles) >= 1:
         for article in articles:
             if article['pdf_link']:
-                filename = article['id'] + '.pdf'
-                urlretrieve(article['pdf_link'], os.path.join(path, filename))
+                try:
+                    filename = article['id'] + '.pdf'
+                    urlretrieve(article['pdf_link'], os.path.join(path, filename))
+                except:
+                    print('Error downloading: %s' % filename)
     else:
         print("No pdf available for arXiv at %d" % article['pdf_link'])
