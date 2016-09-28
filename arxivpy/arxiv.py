@@ -7,9 +7,9 @@ import random
 from dateutil import parser
 
 if sys.version_info[0] == 3:
-    from urllib.request import urlretrieve
+    from urllib.request import urlretrieve, urlopen
 else:
-    from urllib import urlretrieve
+    from urllib import urlretrieve, urlopen
 
 def query(start_index=0,
           max_index=100,
@@ -79,7 +79,7 @@ def query(start_index=0,
         query = '&'.join(query_list)
 
         articles = list()
-        response = urllib.request.urlopen(base_url + query).read()
+        response = urlopen(base_url + query).read()
         entries = feedparser.parse(response)
         for entry in entries['entries']:
             if entry['title'] == 'Error':

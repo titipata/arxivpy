@@ -1,9 +1,13 @@
 # Arxivpy
 
 Python wrapper for [arXiv API](http://arxiv.org/help/api/index).
-[arXiv](http://arxiv.org/) is an open-access journal which has 1,188,199 e-prints in
+Here are related libraries and repositories: [arxiv.py](https://github.com/lukasschwab/arxiv.py),
+[.py](https://arxiv.org/help/api/examples/python_arXiv_parsing_example.txt)
+[arXiv](http://arxiv.org/) is an open-access journal which has 1M+ e-prints in
 Physics, Mathematics, Computer Science, Quantitative Biology,
-Quantitative Finance and Statistics
+Quantitative Finance and Statistics.
+
+## Example
 
 Here is an example on how to use `arxivpy`.
 
