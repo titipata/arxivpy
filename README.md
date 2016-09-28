@@ -1,7 +1,11 @@
 # Arxivpy
 
-Python wrapper for [arXiv API](http://arxiv.org/help/api/index). Here is an
-example on how to use.
+Python wrapper for [arXiv API](http://arxiv.org/help/api/index).
+[arXiv](http://arxiv.org/) is an open-access journal which has 1,188,199 e-prints in
+Physics, Mathematics, Computer Science, Quantitative Biology,
+Quantitative Finance and Statistics
+
+Here is an example on how to use `arxivpy`.
 
 ```python
 import arxivpy
