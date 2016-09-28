@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import urllib
@@ -10,15 +11,15 @@ if sys.version_info[0] == 3:
 else:
     from urllib import urlretrieve
 
-def fetch_arxiv(start_index=0,
-                max_index=100,
-                results_per_iteration=100,
-                wait_time=5.0,
-                fields=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
-                sort_by='lastUpdatedDate',
-                sort_order=None):
+def query(start_index=0,
+          max_index=100,
+          results_per_iteration=100,
+          wait_time=5.0,
+          fields=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
+          sort_by='lastUpdatedDate',
+          sort_order=None):
     """
-    Parse Arxiv XML using its API. We can
+    Function to parse Arxiv XML using the API.
 
     Parameters
     ==========
@@ -34,7 +35,8 @@ def fetch_arxiv(start_index=0,
 
     fields: list or str, list of fields
         see the end of this page http://arxiv.org/help/api/user-manual#python_simple_example
-        for more fields
+        for more fields see https://github.com/titipata/arxivpy/wiki
+        if no field specified, use 'all' as default
 
     sort_by: str, either "relevance" or "lastUpdatedDate" or "submittedDate" or None
     sort_order: str, either "ascending" or "descending" or None
@@ -82,13 +84,21 @@ def fetch_arxiv(start_index=0,
             main_author = entry['author']
             authors = ', '.join([author['name'].strip() for author in entry['authors']])
             link = entry['link']
+            for e in entry['links']:
+                if 'title' in e:
+                    if e['title'] == 'pdf':
+                        pdf_link = e['href']
+                else:
+                    pdf_link = 'http://arxiv.org/pdf/%s' % link.split('/')[-1]
             title = entry['title_detail']['value'].replace('\n', ' ').strip()
             abstract = entry['summary'].replace('\n', ' ')
             publish_date = parser.parse(entry['published'])
-            article = {'term': term,
+            article = {'id': entry['link'].split('/')[-1],
+                       'term': term,
                        'main_author': main_author,
                        'authors': authors,
                        'link': link,
+                       'pdf_link': pdf_link,
                        'title': title,
                        'abstract': abstract,
                        'publish_date': publish_date}
@@ -96,3 +106,16 @@ def fetch_arxiv(start_index=0,
         if i > start_index: time.sleep(wait_time + random.uniform(0, 3))
         articles_all.extend(articles)
     return articles_all
+
+def download(articles, path='arxiv_pdf'):
+    """
+    Give list of parsed Arxiv dictionary, download
+    """
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    for article in articles:
+        if article['pdf_link']:
+            filename = article['id'] + '.pdf'
+            urlretrieve(article['pdf_link'], os.path.join(path, filename))
+        else:
+            print("No pdf available for arXiv at %d" % article['pdf_link'])
