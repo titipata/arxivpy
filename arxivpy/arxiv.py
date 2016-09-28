@@ -22,7 +22,8 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
           results_per_iteration=100,
           wait_time=5.0,
           sort_by='lastUpdatedDate',
-          sort_order=None):
+          sort_order=None,
+          verbose=False):
     """
     Function to parse arXiv XML from the arXiv API.
     See http://arxiv.org/help/api/index for more information.
@@ -99,8 +100,11 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
 
     articles_all = list()
     for i in range(start_index, max_index, results_per_iteration):
-        start_query = 'start=%i' % int(start_index)
-        max_results_query = 'max_results=%i' % int(start_index + results_per_iteration)
+        start_query = 'start=%i' % int(i)
+        max_results_query = 'max_results=%i' % int(i + results_per_iteration)
+
+        if verbose:
+            print('start index = %i, end index = %i' % (int(i), int(i + results_per_iteration)))
 
         ql = [search_query_string, sort_by_query, sort_order_query, start_query, max_results_query]
         query_list = [q for q in ql if q is not '']
