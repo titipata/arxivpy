@@ -2,7 +2,8 @@
 
 Python wrapper for [arXiv API](http://arxiv.org/help/api/index).
 Here are related libraries and repositories: [arxiv.py](https://github.com/lukasschwab/arxiv.py),
-[.py](https://arxiv.org/help/api/examples/python_arXiv_parsing_example.txt)
+[python_arXiv_parsing_example.py](https://arxiv.org/help/api/examples/python_arXiv_parsing_example.txt)
+and [arxiv-sanity-preserver](https://github.com/karpathy/arxiv-sanity-preserver).
 [arXiv](http://arxiv.org/) is an open-access journal which has 1M+ e-prints in
 Physics, Mathematics, Computer Science, Quantitative Biology,
 Quantitative Finance and Statistics.
@@ -19,8 +20,19 @@ articles = arxivpy.query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat
 ```
 
 This will give list of dictionary parsed from arXiv XML file.
-More fields available can be seen from [wiki page](https://github.com/titipata/arxivpy/wiki).
-Moreover, we can download articles to local directory as follows
+You can use other search queries, for example:
+
+```python
+search_query=['cs.DB', 'cs.IR']
+search_query='cs.DB' # select only Databases papers
+search_query='au:kording' # author name includes Kording
+search_query='ti:deep+AND+ti:learning' # title with `deep` and `learning`
+```
+
+More search query prefixes, boonlean and categories available can be seen
+from [wiki page](https://github.com/titipata/arxivpy/wiki).
+Other functionality is that we can download articles to local directory.
+Here is snippet to download articles.
 
 ```python
 arxivpy.download(articles, path='arxiv_pdf')
