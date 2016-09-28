@@ -39,6 +39,7 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
             search_query='cs.DB' # don't need to specify if given a category
             search_query='au:kording'
             search_query='au:kording+AND+ti:science'
+            search_query='au:Kording_K'
         search query prefixes includes ti (title), au (author), abs (abstract) and more.
         See repository wiki page for more information including search query boolean
 
@@ -77,7 +78,7 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
     if isinstance(search_query, list):
         # assume giving a list of categories
         search_query = '+OR+'.join(['cat:%s' % c for c in search_query])
-    elif isinstance(search_query, str) and any([c for c in categories if c in search_query]):
+    elif isinstance(search_query, str) and any([c for c in categories if c in search_query]) and (not 'cat:' in search_query):
         search_query = 'cat:%s' % search_query
     else:
         search_query = search_query

@@ -38,6 +38,13 @@ Here is snippet to download articles.
 arxivpy.download(articles, path='arxiv_pdf')
 ```
 
+**Note from API**
+
+- the maximum number of results returned from a single call (`max_index`)
+is limited to 30000 in slices of at most 2000 at a time.
+- In cases where the API needs to be called multiple times in a row,
+we encourage you to play nice and incorporate a 3 second delay in your code.
+
 ## Installation
 
 First, you need to install [feedparser](https://github.com/kurtmckee/feedparser) library.
