@@ -82,8 +82,8 @@ def query(start_index=0,
         response = urllib.request.urlopen(base_url + query).read()
         entries = feedparser.parse(response)
         for entry in entries['entries']:
-            if entry['entries']['title'] == 'Error':
-                print('Error %s' % entries['entries']['summary'])
+            if entry['title'] == 'Error':
+                print('Error %s' % entry['summary'])
                 print('Check query %s from the website if it returns anything' % (base_url + query))
             term = entry['arxiv_primary_category']['term']
             main_author = entry['author']
@@ -94,7 +94,7 @@ def query(start_index=0,
                     if e['title'] == 'pdf':
                         pdf_url = e['href']
                 else:
-                    pdf_url = 'http://arxiv.org/pdf/%s' % link.split('/abs/')[-1]
+                    pdf_url = 'http://arxiv.org/pdf/%s' % url.split('/abs/')[-1]
             if 'arxiv_comment' in entry.keys():
                 comment = entry['arxiv_comment']
             else:
@@ -111,8 +111,8 @@ def query(start_index=0,
                        'term': term,
                        'main_author': main_author,
                        'authors': authors,
-                       'url': link,
-                       'pdf_url': pdf_link,
+                       'url': url,
+                       'pdf_url': pdf_url,
                        'title': title,
                        'abstract': abstract,
                        'publish_date': publish_date,
