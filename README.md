@@ -31,10 +31,8 @@ search_query='au:kording' # author name includes Kording
 search_query='ti:deep+AND+ti:learning' # title with `deep` and `learning`
 ```
 
-More search query prefixes, boonlean and categories available can be seen
-from [wiki page](https://github.com/titipata/arxivpy/wiki).
-Other functionality is that we can download articles to local directory.
-Here is snippet to download articles.
+More search query prefixes, booleans and categories available can be seen
+from [wiki page](https://github.com/titipata/arxivpy/wiki). You can also use `arxivpy.download` to download the articles to given directory. Here is a snippet to do that.
 
 ```python
 arxivpy.download(articles, path='arxiv_pdf')
@@ -42,15 +40,20 @@ arxivpy.download(articles, path='arxiv_pdf')
 
 **Note from API**
 
-- the maximum number of results returned from a single call (`max_index`)
+- The maximum number of results returned from a single call (`max_index`)
 is limited to 30000 in slices of at most 2000 at a time.
-- In cases where the API needs to be called multiple times in a row,
-we encourage you to play nice and incorporate a 3 second delay in your code.
+- In case where the API needs to be called multiple times in a row,
+we encourage you to play nice and incorporate a 3 seconds delay in your code.
 
 ## Installation
 
-First, you need to install [feedparser](https://github.com/kurtmckee/feedparser) library.
-Then, clone the repository and run `setup.py` to install the package.
+The easiest way is to use `pip`.
+
+```bash
+pip install git+https://github.com/titipata/arxivpy
+```
+
+You can also do it manually by cloning the repository and run `setup.py` to install the package.
 
 ```bash
 git clone https://github.com/titipata/arxivpy
