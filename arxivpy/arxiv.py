@@ -276,6 +276,7 @@ def generate_query_from_text(query_text):
                 elif k == 'cat':
                     cs = q.split('|')
                     q_out = '+OR+'.join(['cat:%s' % c for c in cs])
+                    if len(cs) > 1: q_out = '%28' + q_out + '%29'
                     q_out_list.append(q_out)
 
     seperators = list()
