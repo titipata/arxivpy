@@ -14,6 +14,6 @@ if __name__ == "__main__":
         author_email='titipata@u.northwestern.edu',
         license='(c) 2016 Titipat Achakulvisut',
         keywords='arxiv,xml,pdf',
-        install_requires=['feedparser', 'urllib'],
+        install_requires=['feedparser'],
         packages=['arxivpy'],
     )
