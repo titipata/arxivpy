@@ -22,6 +22,9 @@ articles = arxivpy.query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat
 ```
 
 This will give list of dictionary parsed from arXiv XML file.
+
+### Queries
+
 You can use other search queries, for example:
 
 ```python
@@ -31,15 +34,26 @@ search_query='au:kording' # author name includes Kording
 search_query='ti:deep+AND+ti:learning' # title with `deep` and `learning`
 ```
 
-Or make simple search query using `arxivpy.generate_query`
+Or you can make simple search query using `arxivpy.generate_query`
 
 ```python
-search_query = generate_query(terms=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
-                              prefix='category', boolean='OR')
+search_query = arxivpy.generate_query(terms=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
+                                      prefix='category', boolean='OR')
+```
+
+Or convert plain simple text to arXiv query using `arxivpy.generate_query_from_text`
+
+```python
+query = arxivpy.generate_query_from_text("author k kording & author achakulvisut & title science & abstract recommendation") # awesome paper
+articles = arxivpy.query(search_query=query)
 ```
 
 More search query prefixes, booleans and categories available can be seen
-from [wiki page](https://github.com/titipata/arxivpy/wiki).
+from [wiki page](https://github.com/titipata/arxivpy/wiki). More example queries
+can be found from [arXiv user manual](http://arxiv.org/help/api/user-manual)
+
+### Download PDF
+
 You can also use `arxivpy.download` to download the articles to given directory.
 Here is a snippet to do that.
 

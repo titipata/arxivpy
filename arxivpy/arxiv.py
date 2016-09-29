@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import time
 import urllib
 import feedparser
@@ -226,6 +227,73 @@ def generate_query(terms, prefix='category', boolean='OR', group_bool=False):
     if group_bool:
         query = '%28' + query + '%29'
     return query
+
+def generate_query_from_text(query_text):
+    """
+    Function to generate arXiv query from plain intuitive string
+    to arXiv query format. Each string starts with 'title', 'abstract'
+    'cat', 'author' following by query string. For categories,
+    you should specify all categories separated by '|' e.g.
+        "cat stat.ML|cs.CV"
+
+    Query each seprated byeither & (AND) or &! (ANDNOT).
+    (work in progress)
+
+
+    Parameters
+    ==========
+    query_text: str, query text in plain string with
+        example strings:
+        >> "author konrad kording & title neural nets & cat stat.ML|cs.CV"
+        >> "author kording & author achakulvisut"
+
+    Returns
+    =======
+    query_arxiv: str, arXiv query format
+    """
+    keys = ['title', 'abstract', 'author', 'cat']
+    q_out_list = list()
+    queries = re.split('&!|&', query_text)
+    for query in queries:
+        for k in keys:
+            if k in query:
+                q = query.replace(k, '').strip()
+                if k == 'author':
+                    if ' ' in q:
+                        q_out = '_'.join(q.split(' ')[::-1])
+                    else:
+                        q_out = q
+                    q_out_list.append('au:' + q_out)
+                elif k in ('title', 'abstract'):
+                    if ' ' in q:
+                        q_out = '%%22%s%%22' % q
+                    else:
+                        q_out = q
+                    if k == 'title':
+                        q_out_list.append('ti:' + q_out)
+                    elif k == 'abstract':
+                        q_out_list.append('abs:' + q_out)
+                elif k == 'cat':
+                    cs = q.split('|')
+                    q_out = '+OR+'.join(['cat:%s' % c for c in cs])
+                    q_out_list.append(q_out)
+
+    seperators = list()
+    for sep in re.findall("&!|&", query_text):
+        if sep == '&':
+            seperators.append('+AND+')
+        elif sep == '&!':
+            seperators.append('+ANDNOT+')
+        elif sep == '|':
+            seperators.append('+OR+')
+        else:
+            seperators.append('+AND+')
+
+    for i, j in zip(range(1, 2*len(q_out_list)+1, 2), range(len(seperators))):
+        q_out_list.insert(i, seperators[j])
+
+    query_arxiv = ''.join(q_out_list)
+    return query_arxiv
 
 def download(articles, path='arxiv_pdf'):
     """
