@@ -1,1 +1,1 @@
-from .arxiv import query, download
+from .arxiv import query, generate_query, download

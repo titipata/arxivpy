@@ -85,8 +85,8 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
         search_query = search_query
     search_query_string = 'search_query=%s' % search_query
 
-    if results_per_iteration is None or results_per_iteration > max_index:
-        results_per_iteration = max_index
+    if results_per_iteration is None or results_per_iteration > (max_index - start_index):
+        results_per_iteration = max_index - start_index
 
     if sort_by is not None:
         sort_by_query = 'sortBy=%s' % sort_by
@@ -154,6 +154,78 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
         if i > start_index: time.sleep(wait_time + random.uniform(0, 3))
         articles_all.extend(articles)
     return articles_all
+
+def generate_query(terms, prefix='category', boolean='OR', group_bool=False):
+    """
+    Generate simple arXiv query from given list of terms
+
+    example:
+        >> title = arxivpy.generate_query(['neural network', 'deep learning'], prefix='title', boolean='AND')
+        >> cat = arxivpy.generate_query(['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'], prefix='category', boolean='OR', group_bool=True)
+        >> search_query = title + '+AND+' + cat
+        >> articles = arxivpy.query(search_query=search_query)
+
+        >> search_query = arxivpy.generate_query(['k kording', 't achakulvisut'], prefix='author', boolean='AND')
+        >> articles = arxivpy.query(search_query=search_query)
+
+    Parameters
+    ==========
+    terms: list, list of terms related to specified prefix
+
+    prefix: string, prefix of the query either from
+        'title' or 'abstract' or 'author' or 'category'
+
+    boolean: string, boolean between terms
+        either from 'OR' or 'AND' or 'ANDNOT'
+
+    group_bool: boolean, default False
+        if True, it will return query with parentheses %28 ... %29
+        elif False, it will return plain query
+
+    Returns
+    =======
+    query: string, output query of given prefix
+
+    """
+    if isinstance(terms, str):
+        terms = [terms] # change to list
+    if boolean not in ['OR', 'AND', 'ANDNOT']:
+        print("Boolean should be only from OR, AND or ANDNOT")
+    if prefix not in ['title', 'abstract', 'author', 'category']:
+        print("Prefix should be only from 'title' or 'abstract' or 'author' or 'category'")
+    boolean_str = '+%s+' % boolean
+
+    if prefix == ('title' or 'abstract'):
+        terms_ = []
+        for term in terms:
+            if ' ' in term:
+                phrase = "%%22%s%%22" % '+'.join(term.split(' '))
+                terms_.append(phrase)
+            else:
+                terms_.append(term)
+        if prefix == 'abstract':
+            query = boolean_str.join(['abs:%s' % t for t in terms_])
+        elif prefix == 'title':
+            query = boolean_str.join(['ti:%s' % t for t in terms_])
+
+    elif prefix == 'author':
+        terms_ = []
+        for term in terms:
+            if ' ' in term:
+                terms_.append('_'.join(term.split(' ')[::-1]))
+            else:
+                terms_.append(term)
+        query = boolean_str.join('au:%s' % t for t in terms_)
+
+    elif prefix == 'category':
+        query = boolean_str.join(['cat:%s' % t for t in terms])
+
+    else:
+        query = '' # return empty in not
+
+    if group_bool:
+        query = '%28' + query + '%29'
+    return query
 
 def download(articles, path='arxiv_pdf'):
     """

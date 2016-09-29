@@ -31,8 +31,17 @@ search_query='au:kording' # author name includes Kording
 search_query='ti:deep+AND+ti:learning' # title with `deep` and `learning`
 ```
 
+Or make simple search query using `arxivpy.generate_query`
+
+```python
+search_query = generate_query(terms=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
+                              prefix='category', boolean='OR')
+```
+
 More search query prefixes, booleans and categories available can be seen
-from [wiki page](https://github.com/titipata/arxivpy/wiki). You can also use `arxivpy.download` to download the articles to given directory. Here is a snippet to do that.
+from [wiki page](https://github.com/titipata/arxivpy/wiki).
+You can also use `arxivpy.download` to download the articles to given directory.
+Here is a snippet to do that.
 
 ```python
 arxivpy.download(articles, path='arxiv_pdf')
