@@ -21,7 +21,8 @@ articles = arxivpy.query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat
                          wait_time=5.0, sort_by='lastUpdatedDate') # grab 200 articles
 ```
 
-This will give list of dictionary parsed from arXiv XML file.
+Input `search_query` can be list of [categories](https://github.com/titipata/arxivpy/wiki)
+or string of arXiv formatted query. Output is a list of dictionary parsed from arXiv XML file.
 
 ### Queries
 
@@ -32,6 +33,7 @@ search_query=['cs.DB', 'cs.IR']
 search_query='cs.DB' # select only Databases papers
 search_query='au:kording' # author name includes Kording
 search_query='ti:deep+AND+ti:learning' # title with `deep` and `learning`
+search_query='abs:%22deep+learning%22' # deep learning as a phrase
 ```
 
 Or you can make simple search query using `arxivpy.generate_query`

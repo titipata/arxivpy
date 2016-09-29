@@ -266,7 +266,7 @@ def generate_query_from_text(query_text):
                     q_out_list.append('au:' + q_out)
                 elif k in ('title', 'abstract'):
                     if ' ' in q:
-                        q_out = '%%22%s%%22' % q
+                        q_out = '%%22%s%%22' % '+'.join(q.split(' '))
                     else:
                         q_out = q
                     if k == 'title':
