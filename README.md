@@ -17,12 +17,14 @@ Here is an example on how to use `arxivpy`.
 ```python
 import arxivpy
 articles = arxivpy.query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
-                         start_index=0, max_index=200,
+                         start_index=0, max_index=200, results_per_iteration=100,
                          wait_time=5.0, sort_by='lastUpdatedDate') # grab 200 articles
 ```
 
 Input `search_query` can be list of [categories](https://github.com/titipata/arxivpy/wiki)
 or string of arXiv formatted query. Output is a list of dictionary parsed from arXiv XML file.
+This example will parse 200 last update papers (from index 0 to 200), 100 at a time with wait time
+around 5 seconds (see **note** below if scraping many papers).
 
 ### Queries
 
