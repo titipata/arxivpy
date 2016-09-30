@@ -104,12 +104,13 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
         start_query = 'start=%i' % int(i)
         max_results_query = 'max_results=%i' % int(i + results_per_iteration)
 
-        if verbose:
-            print('start index = %i, end index = %i' % (int(i), int(i + results_per_iteration)))
-
         ql = [search_query_string, sort_by_query, sort_order_query, start_query, max_results_query]
         query_list = [q for q in ql if q is not '']
         query = '&'.join(query_list)
+
+        if verbose:
+            print('start index = %i, end index = %i' % (int(i), int(i + results_per_iteration)))
+            print('arXiv query: \n %s' % base_url + query)
 
         articles = list()
         response = urlopen(base_url + query).read()
