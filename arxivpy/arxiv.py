@@ -119,7 +119,8 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
             if entry['title'] == 'Error':
                 print('Error %s' % entry['summary'])
                 print('Check query %s from the website if it returns anything' % (base_url + query))
-            term = entry['arxiv_primary_category']['term']
+            main_term = entry['arxiv_primary_category']['term']
+            terms = '|'.join([tag['term'] for tag in entry['tags']])
             main_author = entry['author']
             authors = ', '.join([author['name'].strip() for author in entry['authors']])
             url = entry['link']
@@ -142,7 +143,8 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
             abstract = entry['summary'].replace('\n', ' ')
             publish_date = parser.parse(entry['published'])
             article = {'id': url.split('/abs/')[-1],
-                       'term': term,
+                       'term': main_term,
+                       'terms': terms,
                        'main_author': main_author,
                        'authors': authors,
                        'url': url,
@@ -252,12 +254,13 @@ def generate_query_from_text(query_text):
     =======
     query_arxiv: str, arXiv query format
     """
-    keys = ['title', 'abstract', 'author', 'cat']
+    keys = ['title ', 'abstract ', 'author ', 'cat ']
     q_out_list = list()
     queries = re.split('&!|&', query_text)
     for query in queries:
         for k in keys:
             if k in query:
+                k = k.strip()
                 q = query.replace(k, '').strip()
                 if k == 'author':
                     if ' ' in q:
