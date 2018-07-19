@@ -91,3 +91,4 @@ python setup.py install
 ## Dependencies
 
 - [feedparser](https://github.com/kurtmckee/feedparser)
+- [dateutil](https://github.com/dateutil/dateutil)
