@@ -102,7 +102,7 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
     articles_all = list()
     for i in range(start_index, max_index, results_per_iteration):
         start_query = 'start=%i' % int(i)
-        max_results_query = 'max_results=%i' % int(i + results_per_iteration)
+        max_results_query = 'max_results=%i' % int(results_per_iteration)
 
         ql = [search_query_string, sort_by_query, sort_order_query, start_query, max_results_query]
         query_list = [q for q in ql if q is not '']
