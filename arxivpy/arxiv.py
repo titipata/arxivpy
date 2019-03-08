@@ -17,6 +17,7 @@ categories = ['cs.', 'stat.', 'q-bio.', 'nlin.', 'math.',
               'hep-lat', 'hep-ph', 'hep-th', 'math-ph', 'nucl-ex',
               'nucl-th', 'physics.', 'quant-ph']
 
+
 def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
           start_index=0,
           max_index=100,
@@ -122,6 +123,7 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
             main_term = entry['arxiv_primary_category']['term']
             terms = '|'.join([tag['term'] for tag in entry['tags']])
             main_author = entry['author']
+            update_date = parser.parse(entry['updated'])
             authors = ', '.join([author['name'].strip() for author in entry['authors']])
             url = entry['link']
             for e in entry['links']:
@@ -151,6 +153,7 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
                        'pdf_url': pdf_url,
                        'title': title,
                        'abstract': abstract,
+                       'update_date': update_date,
                        'publish_date': publish_date,
                        'comment': comment,
                        'journal_ref': journal_ref}
@@ -158,6 +161,7 @@ def query(search_query=['cs.CV', 'cs.LG', 'cs.CL', 'cs.NE', 'stat.ML'],
         if i > start_index: time.sleep(wait_time + random.uniform(0, 3))
         articles_all.extend(articles)
     return articles_all
+
 
 def generate_query(terms, prefix='category', boolean='OR', group_bool=False):
     """
@@ -231,6 +235,7 @@ def generate_query(terms, prefix='category', boolean='OR', group_bool=False):
         query = '%28' + query + '%29'
     return query
 
+
 def generate_query_from_text(query_text):
     """
     Function to generate arXiv query from plain intuitive string
@@ -299,6 +304,7 @@ def generate_query_from_text(query_text):
 
     query_arxiv = ''.join(q_out_list)
     return query_arxiv
+
 
 def download(articles, path='arxiv_pdf'):
     """
